@@ -81,3 +81,124 @@ console.log(set7);
 //37.1.4 요소 존재 여부 확인
 //Set 객체에 특정 요소가 존재하는지 확인하려면 Set.prototype.has 메서드를 사용한다.
 //has 메서드는 특정 요소의 존재 여부를 나타내는 불리언 값을 반환한다.
+
+const set8 = new Set([1,2,3]);
+console.log(set8.has(2));
+console.log(set8.has(4));
+
+//37.1.5 요소식제
+//Set 객체의 특정 요소를 삭제하려면 Set.prototype.delete 메서드를 사용한다.
+//delete 메서드는 삭제 성공 여부를 나타내는 불리언 값을 변환한다.
+//delete 메서드는 인덱스가 아나리 삭제하려는 요소값을 인수로 전달해야 한다.
+//Set 객체는 순서에 의미가 없다.다시 말해,배열과 같이 인덱스를 갖지 않는다.
+
+const set9 = new Set([1,2,3]);
+//요소 2를 삭제한다.
+set9.delete(2);
+console.log(set9);
+//요소 1을 삭제한다.
+
+set9.delete(1);
+console.log(set9);
+//만약 존재하지 않는 Set 객체의 요소를 삭제하려 하면 에러 없이 무시된다.
+set9.delete(0);
+console.log(set9);
+//delete 메서드는 삭제 성공 여부를 나타내는 불리언 값을 반환한다.
+//따라서 Set.prototype.add 메서드와 달리 연속적으로 호출 할수 없다.
+
+const set10 = new Set([1,2,3]);
+
+//delete는 불리언 값을 반환한다.
+// set10.delete(1).delete(2);
+
+//37.1.6 요소 일괄 삭제
+//Set 객체의 모든 요소를 일괄 삭제하려면 Set.prototype.clear 메서드를 사용한다.
+//clear 메서드는 언제나 undefined를 반환하다.
+console.log(set10.clear());
+console.log(set10);
+
+// 37.1.7 요소순회
+//Set 객체의 요소를 순회하려면 Set.prototype.forEach 메서드를 사용한다.
+//Set.prototype.forEach 메서드는 Array.prototype.forEach 메서드와 유사하게 콜백 함수와
+//forEach 메서드의 콜백 함수 내부에서 this롤 사용될 객체(옵션)를 인수로 전달한다
+//첫번째 인수 : 현재 순회중인 요소값
+//두번쨰 인수 : 현재 순회중인 요소값
+//세번재 인수 : 현재 순회중인 Set객체자체
+const set11 = new Set([1,2,3]);
+set11.forEach((v,v2,data)=> console.log(v,v2,data));
+
+//Set 객체는 이터러블이다.따라서 for...of문으로 순회할 수 있으며,스프레드 문법과
+//배열 디스트럭처링의 대상이 될 수도 있다.
+
+//Set 객체는 Set.prototype의 Symbol.iterator 메서드를 상속받는 이터러블이다.
+const set12 = new Set([1,2,3]);
+console.log(Symbol.iterator in set12);
+
+//이터러블인 Set 객체는 for...of 문으로 순회할 수 있다.
+for(const value of set12){
+    console.log(value);
+}
+
+//이터러블인 Set 객체는 스프레드 문법의 대상이 될 수 있다.
+console.log([...set12]);
+
+//이터러블인 Set 객체는 배열 디스트럭처링 할당의 대상이 될 수 있다.
+const [a,...rest] = set12;
+console.log(a,rest);
+
+//Set 객체는 요소의 순서에 의미를 갖지 않지만 Set 객체를 순회하는 순서는 요소가 추가된
+//순서를 따른다. 이는 ECMAScript 사양에 규정되어 있지는 않지만 다른 이터러블의 순회와
+//호환성을 유지하기 위함이다.
+
+//37.1.8 집합연산
+//Set 객체는 수학적 집합을 구현하기 위한 자료구조다.
+//따라서 Set 객체를 통해 교집합,합집합,차집합 등을 구현할수 있다.
+
+//교집합
+Set.prototype.intersection = function(set){
+    const result = new Set();
+    for(const value of set){
+        //2개의 Set 요소가 공통되는 요소이면 교집합의 대상이 된다.
+        if(this.has(value)) result.add(value);
+    }
+    return result;
+}
+
+const setA = new Set([1,2,3,4]);
+const setB = new Set([2,4]);
+console.log(setA.intersection(setB));
+console.log(setB.intersection(setA));
+
+
+Set.prototype.intersection = function(set){
+    return new Set([...this].filter(v => set.has(v)));
+};
+
+console.log(setA.intersection(setB));
+console.log(setB.intersection(setA));
+
+//합집합
+Set.prototype.union = function(set){
+    //this(Set 객체)를 복사
+    const result = new Set(this);
+    for(const value of set){
+        result.add(value);
+    }
+    return result;
+}
+
+const setC = new Set([1,2,3,4]);
+const setD = new Set([2,4,5]);
+
+console.log(setC.union(setD));
+console.log(setD.union(setC));
+
+Set.prototype.union = function(set){
+    return new Set([...this,...set]);
+};
+
+
+console.log(setC.union(setD));
+console.log(setD.union(setC));
+
+//차집합
