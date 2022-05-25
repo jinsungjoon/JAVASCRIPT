@@ -52,7 +52,7 @@ console.log(set4);
 
 //add 메서드는 새로운 요소가 추가된 Set 객체를 반환한다.
 //따라서 add 메서드를 호출한 후에 add 메서드를 연속적으로 호출 할수 있다.
-
+ 
 const set5 = new Set();
 set5.add(1).add(2);
 console.log(set5);
