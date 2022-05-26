@@ -187,18 +187,66 @@ Set.prototype.union = function(set){
     return result;
 }
 
-const setC = new Set([1,2,3,4]);
-const setD = new Set([2,4,5]);
 
-console.log(setC.union(setD));
-console.log(setD.union(setC));
+console.log(setA.union(setB));
+console.log(setB.union(setA));
 
 Set.prototype.union = function(set){
     return new Set([...this,...set]);
 };
 
 
-console.log(setC.union(setD));
-console.log(setD.union(setC));
+console.log(setA.union(setB));
+console.log(setB.union(setA));
 
 //차집합
+//차집합 A-B는 집합 A에는 존재하지만 집합 B에는 존재하지 않는 요소로 구성된다.
+Set.prototype.difference = function(set){
+    //this(Set객체)를 복사
+    const result = new Set(this);
+    for(const value of set){
+        result.delete(value);
+    }
+    return result;
+}
+
+
+//setA에 대한 setB의 차집합
+console.log(setA.difference(setB));
+
+//setB에 대한 setA의 차집합
+console.log(setB.difference(setA));
+
+Set.prototype.difference = function(set){
+    return new Set([...this].filter(v => !set.has(v)));
+}
+
+
+//setA에 대한 setB의 차집합
+console.log(setA.difference(setB));
+
+//setB에 대한 setA의 차집합
+console.log(setB.difference(setA));
+
+
+//부분 집합과 상위 집합
+//집합 A가 집합  B에 포함되는 경우 집합 A는 집합 B의 부분 집합이며,집합 B는 집합 A의 상위
+// 집합이다
+Set.prototype.isSuperset = function(subset){
+    for(const value of subset){
+        if(!this.has(value))return false;
+    }
+    return true;
+}
+
+console.log(setA.isSuperset(setB));
+console.log(setB.isSuperset(setA));
+
+Set.prototype.isSuperset = function(subset){
+    const supersetArr = [...this];
+    return [...subset].every(v=>supersetArr.includes(v));
+}
+
+
+console.log(setA.isSuperset(setB));
+console.log(setB.isSuperset(setA));
